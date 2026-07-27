@@ -88,14 +88,17 @@ const SEED_AUDIT_LOGS: AuditLog[] = [
 ]
 
 const SEED_PROFILES: Profile[] = [
-  { id: 'u-admin', name: 'Alex Thompson', email: 'admin@wahs.co', role: 'admin', company_id: null },
-  { id: 'u-acq', name: 'Sarah Jenkins', email: 'acq@wahs.co', role: 'acquisition', company_id: null },
-  { id: 'u-sales', name: 'Michael Scott', email: 'sales@wahs.co', role: 'sales', company_id: null },
-  { id: 'u-accounting', name: 'Oscar Martinez', email: 'accounting@wahs.co', role: 'accounting', company_id: null },
-  { id: 'u-client', name: 'Richard Hendricks', email: 'richard@hooli.xyz', role: 'client', company_id: 'c1' }
+  { id: 'u-admin', name: 'Alex Thompson', email: 'admin@wahs.co', role: 'admin', company_id: null, created_at: '2026-01-01T00:00:00Z' },
+  { id: 'u-acq', name: 'Sarah Jenkins', email: 'acq@wahs.co', role: 'acquisition', company_id: null, created_at: '2026-01-01T00:00:00Z' },
+  { id: 'u-sales', name: 'Michael Scott', email: 'sales@wahs.co', role: 'sales', company_id: null, created_at: '2026-01-01T00:00:00Z' },
+  { id: 'u-accounting', name: 'Oscar Martinez', email: 'accounting@wahs.co', role: 'accounting', company_id: null, created_at: '2026-01-01T00:00:00Z' },
+  { id: 'u-client', name: 'Richard Hendricks', email: 'richard@hooli.xyz', role: 'client', company_id: 'c1', created_at: '2026-01-01T00:00:00Z' }
 ]
 
 const getStorageArray = <T>(key: string, seedData: T[]): T[] => {
+  if (typeof window === 'undefined') {
+    return seedData
+  }
   const data = localStorage.getItem(key)
   if (!data) {
     localStorage.setItem(key, JSON.stringify(seedData))
@@ -105,11 +108,13 @@ const getStorageArray = <T>(key: string, seedData: T[]): T[] => {
 }
 
 const saveStorageArray = <T>(key: string, arr: T[]): void => {
-  localStorage.setItem(key, JSON.stringify(arr))
+  if (typeof window !== 'undefined') {
+    localStorage.setItem(key, JSON.stringify(arr))
+  }
 }
 
 const getActiveUser = (): string => {
-  const activeRole = localStorage.getItem('wahs_crm_demo_role') || 'admin'
+  const activeRole = (typeof window !== 'undefined' ? localStorage.getItem('wahs_crm_demo_role') : null) || 'admin'
   const user = SEED_PROFILES.find(p => p.role === activeRole)
   return user ? user.id : 'u-admin'
 }

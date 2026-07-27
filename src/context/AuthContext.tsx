@@ -1,3 +1,5 @@
+'use client';
+
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react'
 import { supabase } from '../supabaseClient'
 import { mockDb } from '../mockData'
@@ -50,12 +52,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
   const [isDemoMode, setIsDemoMode] = useState<boolean>(() => {
-    return localStorage.getItem('wahs_crm_demo_mode') === 'true'
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('wahs_crm_demo_mode') === 'true'
+    }
+    return true
   })
 
   // Synchronize Demo Mode flag
   useEffect(() => {
-    localStorage.setItem('wahs_crm_demo_mode', isDemoMode.toString())
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('wahs_crm_demo_mode', isDemoMode.toString())
+    }
   }, [isDemoMode])
 
   const fetchProfile = async (userId: string) => {
@@ -82,7 +89,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     if (isDemoMode) {
       // Restore demo user from localStorage if exists
-      const savedRole = (localStorage.getItem('wahs_crm_demo_role') as UserRole) || 'admin'
+      const savedRole = (typeof window !== 'undefined' ? localStorage.getItem('wahs_crm_demo_role') : null) as UserRole || 'admin'
       const demoProfile = MOCK_PROFILES[savedRole]
       setUser({ id: demoProfile.id, email: demoProfile.email })
       setProfile({
@@ -94,7 +101,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
 
     // Verify if environment is configured
-    const isConfigured = import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_ANON_KEY
+    const isConfigured = (process.env.NEXT_PUBLIC_VITE_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || (process.env as any).VITE_SUPABASE_URL) && 
+                         (process.env.NEXT_PUBLIC_VITE_SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || (process.env as any).VITE_SUPABASE_ANON_KEY)
 
     if (!isConfigured) {
       console.log("No Supabase configuration detected. Bootstrapping application in Demo Mode.")
@@ -146,7 +154,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       
       if (matchedRole) {
         const demoProfile = MOCK_PROFILES[matchedRole]
-        localStorage.setItem('wahs_crm_demo_role', matchedRole)
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('wahs_crm_demo_role', matchedRole)
+        }
         setUser({ id: demoProfile.id, email: demoProfile.email })
         setProfile({
           ...demoProfile,
@@ -174,7 +184,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (isDemoMode) {
       setUser(null)
       setProfile(null)
-      localStorage.removeItem('wahs_crm_demo_role')
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('wahs_crm_demo_role')
+      }
       setLoading(false)
       return
     }
@@ -198,7 +210,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setLoading(true)
     const demoProfile = MOCK_PROFILES[role]
     if (demoProfile) {
-      localStorage.setItem('wahs_crm_demo_role', role)
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('wahs_crm_demo_role', role)
+      }
       setUser({ id: demoProfile.id, email: demoProfile.email })
       setProfile({
         ...demoProfile,

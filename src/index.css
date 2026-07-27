@@ -4,106 +4,76 @@
 
 @layer base {
   body {
-    @apply bg-crm-950 text-slate-100 antialiased min-h-screen overflow-x-hidden;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    @apply bg-background text-primaryText antialiased min-h-screen overflow-x-hidden;
+    font-family: 'Geist', 'Inter', system-ui, -apple-system, sans-serif;
+    letter-spacing: -0.01em;
   }
 }
 
-/* Glassmorphism Styles */
-.glass-panel {
-  background: rgba(15, 23, 42, 0.5);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+/* Premium Enterprise Utility Classes */
+.premium-card {
+  @apply bg-white border border-border rounded-lg shadow-premium transition-all duration-200;
 }
 
-.glass-card {
-  background: rgba(30, 41, 59, 0.3);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+.premium-card-interactive {
+  @apply bg-white border border-border rounded-lg shadow-premium hover:border-accent transition-all duration-200 cursor-pointer;
 }
 
-.glass-card-hover:hover {
-  background: rgba(30, 41, 59, 0.45);
-  border-color: rgba(99, 102, 241, 0.35);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
-  transform: translateY(-2px);
+.premium-border {
+  border: 1px solid #E8E5DF;
 }
 
-.glass-input {
-  background: rgba(15, 23, 42, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: white;
-  transition: all 0.2s ease;
+.premium-divider {
+  border-color: #EFECE7;
 }
 
-.glass-input:focus {
-  outline: none;
-  border-color: rgba(99, 102, 241, 0.6);
-  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
-  background: rgba(15, 23, 42, 0.8);
-}
-
-/* Premium Gradients */
-.bg-gradient-indigo {
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-}
-
-.text-gradient {
-  background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-/* Scrollbar Customization */
+/* Custom Scrollbar for Luxury Theme */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #090d16;
+  background: #F7F5F2;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
-  border-radius: 4px;
+  background: #E8E5DF;
+  border-radius: 9999px;
+  border: 2px solid #F7F5F2;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: #B89C63;
 }
 
-/* Table styling for dark theme */
+/* Enterprise Data Table styling */
 .crm-table {
   width: 100%;
   border-collapse: collapse;
 }
 .crm-table th {
-  @apply text-left text-xs font-semibold uppercase tracking-wider text-slate-400 py-3 px-4 bg-crm-900/50 border-b border-slate-800;
+  @apply text-left text-xs font-semibold uppercase tracking-wider text-secondaryText py-3.5 px-6 bg-[#FBFBFA] border-b border-border;
 }
 .crm-table td {
-  @apply py-3 px-4 text-sm text-slate-300 border-b border-slate-900/50;
+  @apply py-4 px-6 text-sm text-primaryText border-b border-[#F5F3EE];
 }
 .crm-table tr:hover td {
-  background: rgba(255, 255, 255, 0.02);
+  background: #FDFDFD;
 }
 
 /* Kanban column custom scroll */
 .kanban-column {
-  max-height: calc(100vh - 280px);
+  max-height: calc(100vh - 220px);
 }
 
-/* Loading animations */
-.loading-pulse {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+/* Pulse animation for skeleton loading */
+.skeleton-pulse {
+  animation: skeleton-pulse 1.8s ease-in-out infinite;
 }
 
-@keyframes pulse {
+@keyframes skeleton-pulse {
   0%, 100% {
-    opacity: 1;
+    background-color: rgba(232, 229, 223, 0.5);
   }
   50% {
-    opacity: .5;
+    background-color: rgba(232, 229, 223, 0.8);
   }
 }
